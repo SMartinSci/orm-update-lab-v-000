@@ -12,14 +12,14 @@ class Student
     end
 
     def self.create_table
-        sql =  <<-SQL 
+        sql =  <<-SQL
           CREATE TABLE IF NOT EXISTS students (
-            id INTEGER PRIMARY KEY, 
-            name TEXT, 
+            id INTEGER PRIMARY KEY,
+            name TEXT,
             album TEXT
             )
             SQL
-        DB[:conn].execute(sql) 
+        DB[:conn].execute(sql)
     end
 
     def self.drop_table
@@ -33,11 +33,11 @@ class Student
         self.update
       else
         sql = <<-SQL
-          INSERT INTO songs (name, grade)
+          INSERT INTO students (name, grade)
           VALUES (?, ?)
         SQL
         DB[:conn].execute(sql, self.name, self.grade)
-        @id = DB[:conn].execute("SELECT last_insert_rowid() FROM songs")[0][0]
+        @id = DB[:conn].execute("SELECT last_insert_rowid() FROM students")[0][0]
       end
     end
 
@@ -47,14 +47,13 @@ class Student
       student
     end
 
-
     def self.new_from_db(row)
         student = self.new
         student.id = row[0]
         student.name =  row[1]
         student.grade = row[2]
         student
-      end
+    end
 
     def self.find_by_name(name)
           sql = <<-SQL
@@ -73,7 +72,4 @@ class Student
      sql = "UPDATE students SET name = ?, grade = ? WHERE id = ?"
      DB[:conn].execute(sql, self.name, self.grade, self.id)
    end
-
-
-
 end
